@@ -13,6 +13,8 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 const MainPage: React.FC = () => {
   // const [cart, setCart] = useState<IPet[]>([]);
+  const [rate, setRate] = useState(1);
+  const [currency, setCurrency] = useState("USD");
   const [petList, setPetList] = useState<IPet[]>([]);
   const dispatch: Dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -20,6 +22,19 @@ const MainPage: React.FC = () => {
       .then((res) => res.json())
       .then((data) => setPetList(data));
   }, []);
+  const API_KEY = "af6b5f8aa48d594a7d0eee92";
+  useEffect(() => {
+    if (currency == "GEL") {
+      fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.conversion_rates.GEL);
+          setRate(data.conversion_rates.GEL);
+        });
+    } else {
+      setRate(1);
+    }
+  }, [currency]);
 
   const onCartClick = (id: string, active: boolean): void => {
     const findedItem = petList.find((el) => el.petsId == id);
@@ -50,6 +65,7 @@ const MainPage: React.FC = () => {
       <MySwiper />
       <div className="flex justify-end mt-4">
         <select
+          onChange={(event) => setCurrency(event.target.value)}
           className="border border-[#ddd] px-3 py-2 rounded-sm bg-white"
           name=""
           id=""
@@ -76,6 +92,7 @@ const MainPage: React.FC = () => {
               title={el.title}
               key={el.petsId}
               onHeartClick={onHeartClick}
+              rate={rate}
             />
           ))}
         </div>
