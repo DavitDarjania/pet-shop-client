@@ -7,6 +7,7 @@ import { useAppSelector } from "../hooks/useAppSelector";
 interface IPetAndTrolley extends IPet {
   onCartClick(id: string, active: boolean): void;
   onHeartClick(id: string, active: boolean): void;
+  rate: number;
 }
 
 const Card: React.FC<IPetAndTrolley> = ({
@@ -16,6 +17,7 @@ const Card: React.FC<IPetAndTrolley> = ({
   title,
   onCartClick,
   onHeartClick,
+  rate,
 }) => {
   const [activeList, setActiveList] = useState({
     activeHeart: false,
@@ -45,7 +47,7 @@ const Card: React.FC<IPetAndTrolley> = ({
           {title}
         </h4>
         <p className="text-[16px] font-medium text-[#f39c12] mb-3.75">
-          $ {price}
+          {rate == 1 ? "$" : "₾"} {(Number(price) * rate).toFixed(2)}
         </p>
         <div className="flex justify-between">
           <div className="bg-[#4a6741] text-white flex items-center px-3 rounded-sm hover:bg-[#3c5434] transition-colors w-fit">
